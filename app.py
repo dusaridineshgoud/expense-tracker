@@ -110,7 +110,7 @@ def root():
     return redirect(url_for("index"))
 
 # ============================
-# MAIN SECTIONS (RENDER index.html)
+# MAIN SECTIONS
 # ============================
 @app.route("/dashboard")
 @login_required
@@ -206,7 +206,7 @@ def compute_summary(uid=None):
     }
 
 # ============================
-# OLD POST ADD (ADD PAGE ONLY)
+# ADD EXPENSE (FORM)
 # ============================
 @app.route("/add", methods=["POST"])
 @login_required
@@ -233,7 +233,7 @@ def add_expense():
     return redirect(url_for("index"))
 
 # ============================
-# DELETE (FROM HISTORY)
+# DELETE (HISTORY)
 # ============================
 @app.route("/delete/<int:eid>")
 @login_required
@@ -350,7 +350,6 @@ def api_add():
     summary = compute_summary(uid)
     items = [list(r) for r in fetch_all_expenses(uid)]
 
-
     return jsonify({
         "ok": True,
         "summary": summary,
@@ -369,7 +368,6 @@ def api_delete(eid):
     conn = get_conn()
     cur = conn.cursor()
 
-    # verify owner
     cur.execute("SELECT user_id FROM expenses WHERE id=?", (eid,))
     row = cur.fetchone()
     if not row or row["user_id"] != uid:
@@ -390,7 +388,7 @@ def api_delete(eid):
     })
 
 # ============================
-# API — SEND FULL EXPENSE LIST
+# API — GET ALL EXPENSES
 # ============================
 @app.route("/api/expenses")
 def api_expenses():
@@ -410,7 +408,7 @@ def api_expenses():
     ])
 
 # ============================
-# API — SUMMARY REFRESH
+# API — SUMMARY
 # ============================
 @app.route("/api/summary")
 def api_summary():
@@ -420,18 +418,9 @@ def api_summary():
     return jsonify(compute_summary(uid))
 
 # ============================
-# MAIN
+# MAIN (FINAL FOR RENDER)
 # ============================
 if __name__ == "__main__":
     init_db()
-    print("🔥 Expansive Tracker running at: http://127.0.0.1:5000")
-    app.run(debug=True)
-
-from flask import Flask
-import os
-
-# your existing code (do not remove anything above)
-
-if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
