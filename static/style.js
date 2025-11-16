@@ -1,4 +1,4 @@
-/* Expensive Tracker — Fully Fixed Analytics + Dashboard + Stats + SPA + Theme Toggle Fix */
+/* Expensive Tracker — Fully Fixed Analytics + Dashboard + Stats + SPA + Theme Toggle + Mobile Sidebar */
 (function () {
   'use strict';
 
@@ -197,20 +197,71 @@
   });
 
   // --- SPA Navigation ---
-  function attachNavigation() { /* Keep your existing SPA navigation code here */ }
+  function attachNavigation() {
+    const sidebar = $('.sidebar');
+    if (!sidebar) return;
+    const links = $$('.sidebar a.nav-item');
+    links.forEach(link => link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = link.dataset.target || 'dashboard';
+      activateSection(target);
+      // close mobile sidebar
+      if (window.innerWidth < 992) sidebar.classList.remove('open');
+    }));
+    window.addEventListener('popstate', e => {
+      const sec = (e.state && e.state.section) || location.pathname.replace('/', '') || 'dashboard';
+      activateSection(sec, false);
+    });
+    const init = location.pathname.replace('/', '') || 'dashboard';
+    activateSection(init, false);
+  }
 
-  // --- Theme Toggle (fixed with instant icon visibility) ---
+  async function activateSection(name, pushHistory = true) {
+    if (!name) name = 'dashboard';
+    const sections = $$('.page-section');
+    const links = $$('.sidebar a.nav-item');
+    const pageTitle = $('#pageTitle');
+    const pageSubtitle = $('#pageSubtitle');
+
+    const active = $('.page-section.active');
+    if (active) {
+      active.classList.remove('active');
+      active.style.opacity = 0;
+      active.style.transform = 'translateY(12px)';
+      await new Promise(r => setTimeout(r, 200));
+      active.style.display = 'none';
+    }
+
+    const next = $(`.page-section[data-name="${name}"]`);
+    if (next) {
+      next.style.display = 'block';
+      await new Promise(r => setTimeout(r, 50));
+      next.style.opacity = 1;
+      next.style.transform = 'translateY(0)';
+      next.classList.add('active');
+    }
+
+    links.forEach(l => l.classList.toggle('active', l.dataset.target === name));
+
+    if (pageTitle) pageTitle.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+    if (pageSubtitle) pageSubtitle.textContent = sectionMeta[name]?.subtitle || '';
+
+    if (pushHistory) history.pushState({ section: name }, '', name === 'dashboard' ? '/' : `/${name}`);
+
+    if (name === 'dashboard') buildCharts(window.EXP_SUMMARY, 'spendChart');
+    if (name === 'analytics') buildCharts(window.EXP_SUMMARY, 'fullAnalyticsChart');
+  }
+
+  // --- Theme Toggle ---
   function attachThemeToggle() {
     const btn = $('#themeToggle');
     const icon = $('#themeIcon');
     if (!btn || !icon) return;
 
-    // Apply saved theme immediately
     const saved = localStorage.getItem('theme');
     if (saved) {
       document.body.dataset.theme = saved;
       icon.className = saved === 'light' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
-      icon.style.color = saved === 'light' ? '#0b1325' : '#e6f0ff';
     }
 
     btn.addEventListener('click', () => {
@@ -218,9 +269,21 @@
       const next = cur === 'light' ? 'dark' : 'light';
       document.body.dataset.theme = next;
       icon.className = next === 'light' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
-      icon.style.color = next === 'light' ? '#0b1325' : '#e6f0ff'; // instant update
-      void icon.offsetWidth; // trigger reflow for immediate repaint
       localStorage.setItem('theme', next);
+    });
+  }
+
+  // --- Mobile Sidebar Toggle ---
+  function attachSidebarToggle() {
+    const sidebar = $('#sidebar');
+    const toggleBtn = $('#sidebarToggle');
+    if (!sidebar || !toggleBtn) return;
+
+    toggleBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+    document.addEventListener('click', e => {
+      if (window.innerWidth >= 992) return;
+      if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) sidebar.classList.remove('open');
     });
   }
 
@@ -228,6 +291,7 @@
   function init() {
     attachNavigation();
     attachThemeToggle();
+    attachSidebarToggle();
 
     const form = $('#quickAddForm');
     if (form) form.addEventListener('submit', handleQuickAdd);
@@ -244,4 +308,5 @@
   }
 
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+
 })();
