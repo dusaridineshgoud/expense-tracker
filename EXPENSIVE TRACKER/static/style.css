@@ -1,0 +1,911 @@
+/* ---------- Neo Dark Pro Theme (Midnight Blue + Aqua Glow Polished) ---------- */
+:root {
+  --bg: #070d1f;
+  --card: rgba(255, 255, 255, 0.04);
+  --muted: #9da8c8;
+  --accent: #00cfff;
+  --accent-2: #007bff;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text: #e6f0ff;
+  --glass-blur: 14px;
+  --card-radius: 14px;
+  --transition: 300ms cubic-bezier(.25, .8, .25, 1);
+  --danger: #ff597a;
+  --success: #3afba5;
+  --shadow-accent: rgba(0, 200, 255, 0.18);
+}
+
+/* Light theme */
+body[data-theme="light"] {
+  --bg: #f4f8ff;
+  --card: rgba(0, 0, 0, 0.04);
+  --muted: #5e6780;
+  --accent: #0066ff;
+  --accent-2: #00b4ff;
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --text: #0b1325;
+  --glass-blur: 8px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(800px 600px at 10% 10%, rgba(0, 200, 255, 0.07), transparent),
+              radial-gradient(700px 400px at 90% 80%, rgba(0, 150, 255, 0.05), transparent),
+              var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Layout ---------- */
+.app {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding: 1.25rem;
+}
+
+.sidebar {
+  width: 260px;
+  background: linear-gradient(155deg, #0c132a, #101833);
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 10px 40px rgba(0, 200, 255, 0.12);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand .logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 6px 20px var(--shadow-accent);
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* NAV */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem;
+  border-radius: 10px;
+  color: var(--muted);
+  border: none;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.nav-item i { font-size: 1.05rem; }
+
+.nav-item:hover {
+  transform: translateX(4px);
+  color: var(--accent);
+  background: linear-gradient(90deg, rgba(0, 200, 255, 0.07), transparent);
+}
+
+.nav-item.active {
+  color: var(--accent);
+  background: linear-gradient(90deg, rgba(0, 200, 255, 0.14), transparent);
+  font-weight: 600;
+}
+
+/* Main */
+.main { flex: 1; min-width: 0; }
+.topbar { margin-bottom: 0.5rem; }
+
+.card-glass {
+  background: var(--card);
+  border-radius: var(--card-radius);
+  padding: 1rem;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 10px 40px rgba(0, 200, 255, 0.04);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.card-glass:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 50px rgba(0, 200, 255, 0.1);
+}
+
+/* Balance */
+.balance-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.balance-card { padding: 1.25rem; }
+.balance-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.small-muted { color: var(--muted); font-size: 0.85rem; }
+.muted-pill {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);
+  border: 1px solid var(--glass-border);
+  color: var(--muted);
+}
+
+/* Buttons */
+.glow-btn {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border: none;
+  color: white;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 150, 255, 0.22);
+  transition: all var(--transition);
+  font-weight: 500;
+}
+.glow-btn:hover { filter: brightness(1.12); transform: translateY(-2px); }
+
+/* Table */
+.table thead th {
+  border-bottom: none;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.table td, .table th { border-color: transparent; padding: 0.55rem 0.6rem; }
+.table tbody tr:hover td {
+  background: linear-gradient(90deg, rgba(0, 200, 255, 0.06), transparent);
+}
+
+/* Chart */
+.chart-wrap {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+}
+
+/* Section toggle (SPAs) */
+.page-section {
+  display: none;
+  opacity: 0;
+  transition: opacity var(--transition);
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.page-section.active {
+  display: block;
+  opacity: 1;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Grid */
+.d-grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1rem;
+}
+
+/* Responsive rules */
+@media (max-width: 991px) {
+  .sidebar { position: fixed; left: -320px; top: 1rem; z-index: 1050; transition: left 300ms ease; width: 80%; max-width: 320px; }
+  .sidebar.open { left: 1rem; }
+  .app { padding: 0.75rem; }
+  .balance-row { grid-template-columns: 1fr; }
+  .d-grid-2-col { display: block; grid-template-columns: 1fr; }
+  .topbar { gap: 0.5rem; }
+}
+
+/* Glow & subtle animation */
+.sidebar::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(0,150,255,0.06), transparent 60%);
+  animation: sidebarGlow 8s infinite linear;
+}
+
+.sidebar::before {
+  pointer-events: none !important;
+  z-index: 0;
+}
+
+.sidebar * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes sidebarGlow {
+  0% { transform: rotate(0deg) scale(1.05); }
+  50% { transform: rotate(180deg) scale(1); }
+  100% { transform: rotate(360deg) scale(1.05); }
+}
+
+/* Light-mode sidebar adjustments */
+[data-theme="light"] .sidebar {
+  background: linear-gradient(145deg, #f8f9fa, #e8ebf2);
+  box-shadow: 0 0 25px rgba(0, 150, 255, 0.12);
+}
+
+/* Theme toggle hover */
+#themeToggle { transition: all 0.25s ease; }
+#themeToggle:hover { transform: rotate(10deg) scale(1.06); box-shadow: 0 0 10px rgba(0,150,255,0.3); }
+
+/* 1. Basic styling to hide inactive pages and make the active one fill the space. 
+   Assuming .main has relative positioning, which is common. 
+*/
+.page-section {
+    display: none; /* Hide all sections by default */
+}
+
+.page-section.active {
+    display: block; /* Show only the active section */
+}
+
+/*
+2. Style to make the full-page sections (Add, Analytics, History) expand.
+   We only want this effect on non-dashboard sections.
+   This overwrites the standard grid layout of the dashboard when a non-dashboard section is active.
+*/
+.page-section[data-name="add"].active,
+.page-section[data-name="analytics"].active,
+.page-section[data-name="history"].active {
+    /* These styles force the section to occupy the width of the main content area, 
+       allowing the content inside (like the Add form) to center nicely.
+    */
+    width: 100%;
+    /* You may need to adjust layout properties here depending on your .main and .content-sections styles */
+}
+
+/* ========== Analytics Section Fix ========== */
+.page-section[data-name="analytics"] .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.chart-wrap {
+  background: var(--card-bg, rgba(255,255,255,0.04));
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.chart-wrap:hover {
+  transform: scale(1.02);
+}
+
+/* Category Summary Table */
+#categorySummaryList {
+  margin-top: 1rem;
+  background: var(--card-bg, rgba(255,255,255,0.06));
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+#categorySummaryList table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#categorySummaryList th, 
+#categorySummaryList td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text-primary, #333);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#categorySummaryList th {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #666);
+}
+
+#categorySummaryList tr:hover td {
+  background: rgba(0, 140, 255, 0.08);
+  color: var(--text-hover, #007bff);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-section[data-name="analytics"] .row {
+    flex-direction: column;
+  }
+  .chart-wrap, #categorySummaryList {
+    width: 100%;
+  }
+}
+
+
+
+/* 3. IMPORTANT: When a non-dashboard page is active, we might want to hide the two-column grid.
+   This is often managed by your CSS utility for the layout. 
+   If your layout breaks, you might need a CSS rule that targets the parent container.
+*/
+/* .main-content-sections {
+    /* Adjust this if the content sections parent needs layout change */
+    /* Example: if you have a grid layout that only makes sense for the dashboard: */
+    /* display: block; */
+
+    /* Hide inactive sections */
+.page-section {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show active section smoothly */
+.page-section.active {
+  display: block;
+  opacity: 1;
+}
+
+
+/* === NAV + SECTION STYLES === */
+.sidebar a.nav-item {
+  cursor: pointer;
+  color: var(--text-muted, #b0b6bf);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+  text-decoration: none;
+  user-select: none;
+}
+.sidebar a.nav-item:hover,
+.sidebar a.nav-item:focus {
+  background: rgba(255,255,255,0.06);
+  color: var(--text, #fff);
+  transform: translateX(2px);
+  outline: none;
+}
+.sidebar a.nav-item.active {
+  background: linear-gradient(90deg, rgba(0,199,255,0.12), rgba(0,150,255,0.14));
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,140,255,0.12);
+}
+
+/* page section transitions */
+.page-section {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.32s ease, transform 0.32s ease;
+}
+.page-section.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect keyboard focus for accessibility */
+.sidebar a.nav-item:focus {
+  box-shadow: 0 0 0 3px rgba(0,150,255,0.12);
+}
+
+/* 11-11-2025  */
+
+/* --- Smooth page fade + nav polish --- */
+.main { transition: opacity 0.28s ease, transform 0.28s ease; }
+
+/* hover state (JS also toggles .hover) */
+.sidebar .nav-item.hover,
+.sidebar .nav-item:hover {
+  color: var(--accent);
+  background: linear-gradient(90deg, rgba(0,200,255,0.08), transparent);
+  transform: translateX(3px);
+}
+
+/* ensure active state is prominent */
+.sidebar .nav-item.active {
+  color: var(--accent);
+  background: linear-gradient(90deg, rgba(0,200,255,0.16), transparent);
+  box-shadow: 0 6px 18px rgba(0,150,255,0.12);
+  font-weight: 600;
+}
+
+/* make cards slightly cleaner */
+.card-glass {
+  border-radius: 14px;
+  transition: transform 220ms cubic-bezier(.25,.8,.25,1), box-shadow 220ms ease;
+}
+
+
+/* === Fix for Dashboard Transactions Hover Text Color === */
+.transactions-card table tbody tr:hover td {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff !important; /* Make text white on hover */
+}
+
+.transactions-card table tbody tr:hover td .muted-pill {
+  color: #fff !important; /* Make category pill text white */
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.transactions-card table tbody tr:hover td button i {
+  color: #fff !important; /* Trash icon turns white too */
+}
+
+/* === Refined TXN (Transactions) Card Styling === */
+.transactions-card {
+  background: rgba(255, 255, 255, 0.02); /* translucent glass effect */
+  border: 1px solid var(--glass-border);
+  border-radius: 10px; /* sharp but slightly smooth corners */
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 6px 20px rgba(0, 200, 255, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
+}
+
+.transactions-card:hover {
+  transform: translateY(-3px);
+  background: rgba(0, 200, 255, 0.05); /* subtle glow tint */
+  box-shadow: 0 8px 25px rgba(0, 200, 255, 0.12);
+}
+
+/* Table text colors refined */
+.transactions-card table td, 
+.transactions-card table th {
+  color: var(--text);
+}
+
+/* Make hover readable and professional */
+.transactions-card table tbody tr:hover td {
+  background: linear-gradient(90deg, rgba(0,200,255,0.12), rgba(0,120,255,0.10));
+  color: #fff !important;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+
+/* === TXN Table Text Color Reset & Hover Polish === */
+
+/* === FIX: Make TXN table headers visible and balanced === */
+.table thead th {
+  background: var(--card);
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--glass-border);
+  letter-spacing: 0.5px;
+}
+
+/* Light theme adjustment */
+[data-theme="light"] .table thead th {
+  background: #f1f5fb;
+  color: #0a0a0a;
+  border-bottom: 1px solid #d3d8e4;
+}
+
+/* Ensure contrast for TXN/Category/Amount in white mode */
+[data-theme="light"] .table tbody td {
+  color: #1a1a1a;
+}
+
+
+/* Default (non-hover) TXN rows */
+.transactions-card table tbody tr td {
+  color: var(--text); /* normal readable text color */
+  background: transparent; /* remove white paper effect */
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* When hovered */
+.transactions-card table tbody tr:hover td {
+  background: linear-gradient(90deg, rgba(0,200,255,0.10), rgba(0,120,255,0.12));
+  color: #fff; /* text turns white only while hovering */
+}
+
+/* Reset pill and icon colors properly */
+.transactions-card table tbody tr td .muted-pill {
+  color: var(--muted);
+  border-color: var(--glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.25s ease;
+}
+
+.transactions-card table tbody tr:hover td .muted-pill {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.transactions-card table tbody tr td button i {
+  color: var(--danger);
+  transition: color 0.25s ease;
+}
+
+.transactions-card table tbody tr:hover td button i {
+  color: #fff;
+}
+
+
+/* === Analytics Section Professional Layout === */
+.analytics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.analytics-chart {
+  flex: 1 1 45%;
+  min-width: 280px;
+}
+
+.analytics-categories {
+  flex: 1 1 45%;
+  min-width: 260px;
+}
+
+#categorySummaryList {
+  background: var(--card-bg, rgba(255,255,255,0.05));
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+#categorySummaryList table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#categorySummaryList th,
+#categorySummaryList td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.9rem;
+  color: var(--text-primary, #222);
+}
+
+#categorySummaryList th {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #666);
+}
+
+#categorySummaryList tr:hover td {
+  background: rgba(0, 140, 255, 0.08);
+  transition: 0.25s ease;
+  color: var(--text-hover, #007bff);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .analytics-row {
+    flex-direction: column;
+  }
+}
+
+#categorySummaryList table {
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+#categorySummaryList th {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+#categorySummaryList td {
+  padding: 6px 8px;
+}
+
+/* --- Category Totals Professional Styling --- */
+#categorySummaryList {
+  background: var(--panel-bg, rgba(255, 255, 255, 0.08));
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+body[data-theme="light"] #categorySummaryList {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* table inside category summary */
+#categorySummaryList table {
+  width: 100%;
+  color: inherit;
+  font-size: 0.95rem;
+  border-collapse: collapse;
+}
+
+#categorySummaryList th,
+#categorySummaryList td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body[data-theme="light"] #categorySummaryList th,
+body[data-theme="light"] #categorySummaryList td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#categorySummaryList th {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+#categorySummaryList tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(1.01);
+  transition: all 0.2s ease-in-out;
+}
+
+/* --- History Table — Modern Glass Row Hover Fix --- */
+#historyTable tr {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  transition: all 0.25s ease;
+}
+
+#historyTable td {
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Hover Effect — Glow with readable text */
+#historyTable tr:hover td {
+  background: linear-gradient(90deg, rgba(0, 200, 255, 0.09), rgba(0, 150, 255, 0.05));
+  color: #ffffff !important;
+  transform: translateX(2px);
+}
+
+/* Light Theme Adjustments */
+body[data-theme="light"] #historyTable tr {
+  background: rgba(255, 255, 255, 0.85);
+  color: #111;
+}
+
+body[data-theme="light"] #historyTable tr:hover td {
+  background: linear-gradient(90deg, rgba(0, 150, 255, 0.15), rgba(0, 200, 255, 0.1));
+  color: #fff !important;
+}
+
+/* Table Header Styling */
+#historyTable th {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.5rem;
+}
+
+body[data-theme="light"] #historyTable th {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+/* --- History Transaction Rows — Softened Background --- */
+.page-section[data-name="history"] #historyTable tr {
+  background: rgba(255, 255, 255, 0.08); /* soft translucent white */
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.page-section[data-name="history"] #historyTable tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05); /* alternate subtle shade */
+}
+
+.page-section[data-name="history"] #historyTable tr:hover td {
+  background: linear-gradient(90deg, rgba(0, 200, 255, 0.15), rgba(0, 255, 255, 0.08));
+  color: #fff; /* ensure text visible while hover */
+}
+
+
+/* --- Professional Light Theme Polish (Soft Frosted White Mode) --- */
+body[data-theme="light"] {
+  --bg: #eef2f7; /* soft bluish-white, not pure white */
+  --card: rgba(0, 0, 0, 0.03);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --muted: #5a647a;
+  --accent: #007bff; /* vivid blue accent */
+  --accent-2: #00b4ff;
+  --text: #111827; /* deep neutral gray, not black */
+  --glass-blur: 10px;
+}
+
+/* Sidebar in light mode */
+[data-theme="light"] .sidebar {
+  background: linear-gradient(145deg, #f9fafc, #e7eaf1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Nav items - subtle hover and active states */
+[data-theme="light"] .nav-item {
+  color: #444;
+}
+[data-theme="light"] .nav-item:hover {
+  background: rgba(0, 123, 255, 0.08);
+  color: #007bff;
+}
+[data-theme="light"] .nav-item.active {
+  background: linear-gradient(90deg, rgba(0, 123, 255, 0.15), rgba(0, 200, 255, 0.1));
+  color: #0056b3;
+  font-weight: 600;
+}
+
+/* Tables and cards */
+[data-theme="light"] .card-glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  color: #111827;
+}
+
+/* Hover effects for transaction/history rows */
+[data-theme="light"] #historyTable tr:hover td,
+[data-theme="light"] #recentList tr:hover td {
+  background: rgba(0, 123, 255, 0.08);
+  color: #111827;
+}
+
+/* Charts area contrast tweak */
+[data-theme="light"] .chart-wrap {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+
+/* === Theme toggle, menu tab, and smooth theme transition === */
+
+/* --- Smooth theme transition (applies to all elements) --- */
+* {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+}
+
+/* --- Theme toggle visibility --- */
+#themeToggle {
+  background: var(--accent-bg, transparent);
+  border-radius: 50%;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+body[data-theme='light'] #themeToggle {
+  background: #f0f0f0;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme='light'] #themeIcon {
+  color: #333 !important;
+}
+
+body[data-theme='dark'] #themeToggle {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme='dark'] #themeIcon {
+  color: #ffdc70 !important;
+}
+
+#themeToggle:hover {
+  background: rgba(0, 150, 255, 0.15);
+  box-shadow: 0 0 10px rgba(0, 150, 255, 0.25);
+}
+
+/* --- Menu tab refinement --- */
+.sidebar a.nav-item {
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  transition: background var(--ui-transition), color var(--ui-transition), transform 0.22s;
+}
+
+.sidebar a.nav-item.active {
+  background: linear-gradient(135deg, rgba(0,120,255,0.18), rgba(0,200,255,0.10));
+  color: #fff !important;
+  box-shadow: 0 6px 20px rgba(0,120,255,0.12);
+  transform: translateX(2px);
+}
+
+.sidebar a.nav-item:not(.active):hover {
+  transform: translateX(3px);
+}
+
+
+/* unify hover intensity and transition timing */
+:root { --ui-hover-tint: rgba(0,140,255,0.08); --ui-hover-strong: rgba(0,140,255,0.12); --ui-transition: 0.32s; }
+
+* { transition: background-color var(--ui-transition) ease, color var(--ui-transition) ease, box-shadow var(--ui-transition) ease; }
+
+/* use softer non-invasive hover for most elements */
+.card-glass:hover,
+.transactions-card:hover,
+#categorySummaryList:hover {
+  box-shadow: 0 10px 30px rgba(0,150,255,0.06);
+  transform: translateY(-3px);
+}
+
+/* specific: nav hover */
+.sidebar a.nav-item:not(.active):hover {
+  background: var(--ui-hover-tint);
+  color: var(--accent);
+}
+
+/* --- Professional History / TXN Hover Fix --- */
+.table tbody tr {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  transition: background 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
+}
+
+.table tbody tr:hover {
+  background: rgba(0, 180, 255, 0.18);
+  transform: translateY(-2px);
+  color: #eaf7ff; /* soft readable white */
+}
+
+/* --- Light Theme --- */
+body[data-theme="light"] .table tbody tr {
+  background: rgba(0, 0, 0, 0.02);
+  color: #222;
+}
+
+body[data-theme="light"] .table tbody tr:hover {
+  background: rgba(0, 140, 255, 0.16);
+  color: #0b1325; /* keep readable dark text */
+}
+
+/* Keep category pills readable always */
+.muted-pill {
+  color: var(--muted);
+  background: rgba(255,255,255,0.06);
+  transition: all 0.2s ease;
+}
+.muted-pill:hover {
+  background: rgba(0,200,255,0.18);
+  color: #fff;
+}
+
+
+/* Top-right logout icon fix for light/dark themes */
+#logoutIcon {
+  color: var(--text) !important;    /* force theme text color */
+  z-index: 999;                      /* ensure it sits above other elements */
+  position: relative;                /* create stacking context */
+  transition: color var(--transition) ease;
+}
+
+/* Light theme adjustments */
+body[data-theme="light"] #logoutIcon {
+  color: #0b1325 !important;        /* dark color for light background */
+}
+
+/* Dark theme adjustments */
+body[data-theme="dark"] #logoutIcon {
+  color: #e6f0ff !important;        /* light color for dark background */
+}
