@@ -1,4 +1,4 @@
-# app.py — Expansive Tracker (full production-ready version)
+# app.py — Expansive Tracker (Render-safe version)
 from functools import wraps
 import os
 import sqlite3
@@ -7,26 +7,27 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# ============================
-# SECURITY + ENV CONFIG
-# ============================
+# =============================================
+# SECURITY + SESSION
+# =============================================
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
-# ============================
-# DATABASE PATH (PERSISTENT ON RENDER)
-# ============================
-# ============================
-# DATABASE PATH (PERSISTENT ON RENDER)
-# ============================
-BASE_DIR = "/opt/render/project/data"   # Render permanent disk path
+# =============================================
+# DATABASE PATH — Render PERMANENT STORAGE
+# =============================================
+# Render persistent directory (inside your service)
+BASE_DIR = "/opt/render/project/src/data"
+
+# Make sure directory exists
+os.makedirs(BASE_DIR, exist_ok=True)
+
 DB_PATH = os.path.join(BASE_DIR, "expenses.db")
 
-
-# ============================
+# =============================================
 # DB CONNECTION
-# ============================
+# =============================================
 def get_conn():
-    conn = sqlite3.connect(DB_PATH, timeout=3)
+    conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
     try:
         conn.execute("PRAGMA journal_mode=WAL;")
@@ -34,7 +35,6 @@ def get_conn():
     except:
         pass
     return conn
-
 
 def table_has_column(table, column):
     conn = get_conn()
@@ -44,15 +44,14 @@ def table_has_column(table, column):
     conn.close()
     return column in cols
 
-
-# ============================
-# INITIAL SETUP
-# ============================
+# =============================================
+# INITIAL DATABASE SETUP
+# =============================================
 def init_db():
     conn = get_conn()
     cur = conn.cursor()
 
-    # expenses table
+    # Expense table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,6 +62,7 @@ def init_db():
     """)
     conn.commit()
 
+    # Extra columns if missing
     if not table_has_column("expenses", "category"):
         cur.execute("ALTER TABLE expenses ADD COLUMN category TEXT DEFAULT 'General'")
         conn.commit()
@@ -71,7 +71,7 @@ def init_db():
         cur.execute("ALTER TABLE expenses ADD COLUMN user_id INTEGER DEFAULT NULL")
         conn.commit()
 
-    # users table
+    # Users table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,13 +85,11 @@ def init_db():
 
     conn.close()
 
-
-# ============================
+# =============================================
 # AUTH HELPERS
-# ============================
+# =============================================
 def current_user_id():
     return session.get("user_id")
-
 
 def login_required(fn):
     @wraps(fn)
@@ -101,21 +99,18 @@ def login_required(fn):
         return fn(*args, **kwargs)
     return wrapper
 
-
-# ============================
+# =============================================
 # ROUTES
-# ============================
+# =============================================
 @app.route("/welcome")
 def welcome():
     return render_template("welcome.html")
-
 
 @app.route("/")
 def root():
     if not current_user_id():
         return redirect(url_for("welcome"))
     return redirect(url_for("index"))
-
 
 @app.route("/dashboard")
 @login_required
@@ -128,7 +123,6 @@ def index():
         active_section="dashboard"
     )
 
-
 @app.route("/add")
 @login_required
 def add_page():
@@ -139,7 +133,6 @@ def add_page():
         summary=compute_summary(uid),
         active_section="add"
     )
-
 
 @app.route("/analytics")
 @login_required
@@ -152,7 +145,6 @@ def analytics_page():
         active_section="analytics"
     )
 
-
 @app.route("/history")
 @login_required
 def history_page():
@@ -164,10 +156,9 @@ def history_page():
         active_section="history"
     )
 
-
-# ============================
-# FETCH EXPENSES
-# ============================
+# =============================================
+# FETCH DATA
+# =============================================
 def fetch_all_expenses(uid=None):
     conn = get_conn()
     cur = conn.cursor()
@@ -194,10 +185,9 @@ def fetch_all_expenses(uid=None):
     return [(r["id"], r["title"], float(r["amount"]), r["category"], r["date_display"])
             for r in rows]
 
-
-# ============================
+# =============================================
 # SUMMARY
-# ============================
+# =============================================
 def compute_summary(uid=None):
     conn = get_conn()
     cur = conn.cursor()
@@ -235,10 +225,9 @@ def compute_summary(uid=None):
         "by_category": summary
     }
 
-
-# ============================
+# =============================================
 # ADD EXPENSE
-# ============================
+# =============================================
 @app.route("/add", methods=["POST"])
 @login_required
 def add_expense():
@@ -262,10 +251,9 @@ def add_expense():
 
     return redirect(url_for("index"))
 
-
-# ============================
+# =============================================
 # DELETE EXPENSE
-# ============================
+# =============================================
 @app.route("/delete/<int:eid>")
 @login_required
 def delete_expense(eid):
@@ -286,10 +274,9 @@ def delete_expense(eid):
 
     return redirect(url_for("index"))
 
-
-# ============================
+# =============================================
 # REGISTER
-# ============================
+# =============================================
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -318,10 +305,9 @@ def register():
 
     return render_template("register.html")
 
-
-# ============================
+# =============================================
 # LOGIN
-# ============================
+# =============================================
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -343,19 +329,17 @@ def login():
 
     return render_template("login.html")
 
-
-# ============================
+# =============================================
 # LOGOUT
-# ============================
+# =============================================
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-
-# ============================
+# =============================================
 # API ENDPOINTS
-# ============================
+# =============================================
 @app.route("/api/add", methods=["POST"])
 def api_add():
     uid = current_user_id()
@@ -390,7 +374,6 @@ def api_add():
         "items": [list(r) for r in fetch_all_expenses(uid)]
     })
 
-
 @app.route("/api/delete/<int:eid>", methods=["DELETE"])
 def api_delete(eid):
     uid = current_user_id()
@@ -416,7 +399,6 @@ def api_delete(eid):
         "items": fetch_all_expenses(uid)
     })
 
-
 @app.route("/api/expenses")
 def api_expenses():
     uid = current_user_id()
@@ -434,7 +416,6 @@ def api_expenses():
         for r in fetch_all_expenses(uid)
     ])
 
-
 @app.route("/api/summary")
 def api_summary():
     uid = current_user_id()
@@ -442,10 +423,9 @@ def api_summary():
         return jsonify({})
     return jsonify(compute_summary(uid))
 
-
-# ============================
+# =============================================
 # MAIN ENTRY
-# ============================
+# =============================================
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
