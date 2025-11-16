@@ -15,10 +15,10 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 # ============================
 # DATABASE PATH (PERSISTENT ON RENDER)
 # ============================
-BASE_DIR = "/var/data"   # render permanent storage
-if not os.path.exists(BASE_DIR):
-    os.makedirs(BASE_DIR, exist_ok=True)
-
+# ============================
+# DATABASE PATH (PERSISTENT ON RENDER)
+# ============================
+BASE_DIR = "/opt/render/project/data"   # Render permanent disk path
 DB_PATH = os.path.join(BASE_DIR, "expenses.db")
 
 
